@@ -7,21 +7,29 @@ class Search extends Component {
   static propTypes = {
     searchUsers: PropTypes.func.isRequired,
     clearUsers: PropTypes.func.isRequired,
-    showClear:PropTypes.bool.isRequired,
+    showClear: PropTypes.bool.isRequired,
+    showAlert: PropTypes.func.isRequired,
   };
   formSubmitprevent = (e) => {
     e.preventDefault();
   };
   onSubmit = (e) => {
-    // console.log(this.state.text);
-    this.props.searchUsers(this.state.text);
-    this.setState({ text: "" });
+    if (this.state.text === "") {
+      //   alert("enter a name"); instead of a default alert message lets create our own custom alert
+      this.props.showAlert("Enter something...", "light");
+    } else {
+      this.props.searchUsers(this.state.text);
+      this.setState({ text: "" });
+      this.props.clearAlert();
+    }
+
     e.preventDefault();
   };
-  onchangeinputHandler = (e) => this.setState({ [e.target.name]: e.target.value });
+  onchangeinputHandler = (e) =>
+    this.setState({ [e.target.name]: e.target.value });
 
   render() {
-      const {showClear, clearUsers} = this.props;
+    const { showClear, clearUsers } = this.props;
     return (
       <div>
         <form className="form" onSubmit={this.formSubmitprevent}>
@@ -39,11 +47,8 @@ class Search extends Component {
             className="btn btn-block btn-dark"
           />
           {showClear && (
-            <button
-              className="btn btn-light btn-block"
-              onClick={clearUsers}
-            >
-              clear 
+            <button className="btn btn-light btn-block" onClick={clearUsers}>
+              clear
             </button>
           )}
         </form>

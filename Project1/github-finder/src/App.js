@@ -5,10 +5,12 @@ import Navbar from "./components/layout/Navbar";
 import Users from "./components/users/Users";
 import axios from "axios";
 import Search from "./components/users/Search";
+import Alert from "./components/layout/Alert";
 class App extends Component {
   state = {
     users: [],
     loading: false,
+    alert: null,
   };
   // todo: with using async and await
   // async componentDidMount() {
@@ -22,21 +24,42 @@ class App extends Component {
 
   searchUsers = async (searchName) => {
     this.setState({ loading: true });
-    const res = await axios.get(`https://api.github.com/search/users?q=${searchName}&client_id=${process.env.ID}&client_secret=${process.env.SECRET}`);
-    console.log(res.data.items);
-    // https://api.github.com/search/users?q=brad&client_id=a14e95e7e8076fafc044&client_secret=dbf286473b23e7ce44a2d25626fd71608d40769b
+    const res = await axios.get(
+      `https://api.github.com/search/users?q=${searchName}&client_id=${process.env.ID}&client_secret=${process.env.SECRET}`
+    );
+    // console.log(res.data.items);
     this.setState({ users: res.data.items, loading: false });
   };
   // clearing the search results
   clearUsers = () => this.setState({ users: [], loading: false });
+  // show alert message when user searches without entering name
+  
+  showAlert = (msg, type) => {
+    this.setState({ alert: { msg, type } });
+    // lets clear the displayed alert after sometime using setTimeOut()
+    // setTimeout(() => {
+    //   this.setState({ alert: null });
+    // }, 4000);
+    // the above SetTimeout fn is commented out because we are using the clearAlert function to achieve the functionality of clearing the alert whenever it is not needed
+  };
+  // function to clear the alert after user enters something and searches for user
+  clearAlert = () => {
+    this.setState({ alert: null });
+  };
   render() {
     const arr = [11, 22, 33, 44, 55];
     return (
       <div className="App">
-        <Navbar arr={arr} title="Github Finder"/>
+        <Navbar arr={arr} title="Github Finder" />
         {/* <UserItem /> */}
         <div className="container">
-          <Search searchUsers={this.searchUsers} clearUsers={this.clearUsers} showClear={this.state.users.length > 0 ? true : false}
+          <Alert alert={this.state.alert} />
+          <Search
+            clearAlert={this.clearAlert}
+            searchUsers={this.searchUsers}
+            clearUsers={this.clearUsers}
+            showClear={this.state.users.length > 0 ? true : false}
+            showAlert={this.showAlert}
           />
           <Users loading={this.state.loading} users={this.state.users} />
         </div>

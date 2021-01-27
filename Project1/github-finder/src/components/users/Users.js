@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import img from "../../assets/1.png";
 import UserItem from "./UserItem";
-class Users extends Component {
-  state = {
+import Spinner from "../layout/Spinner";
+import PropTypes from 'prop-types';
+const Users = (props) => {
+  // todo : we don't need the below users array of objects anymore.. because they are coded values
+  // so we will fetch users from github api in main App component and pass them down here
+  const state = {
     users: [
       {
         id: 1,
         login: "moving",
-        avatar_url: 'https://avatars.githubusercontent.com/u/20?v=4',
+        avatar_url: img,
         html_url: "https://github.com/kevinclark",
       },
       {
@@ -17,29 +21,30 @@ class Users extends Component {
           "https://www.flaticon.com/svg/vstatic/svg/2040/2040632.svg?token=exp=1611718454~hmac=35d223ef10d4e52650ffb5adceb205fe",
         html_url: "https://github.com/movingmelody",
       },
-      {
-        id: 3,
-        login: "moving melody",
-        avatar_url: img,
-        html_url: "https://github.com/ben",
-      },
     ],
   };
-
-  render() {
+  const { users, loading } = props;
+  if (loading) {
+    return <Spinner />;
+  } else {
     return (
       <div style={usersStyle}>
-        {this.state.users.map((user) => (
-          /* <h1 key={user.id}>{user.login}</h1> */
-          <UserItem key={user.id} user={user} />
+        {users.map((user) => (
+          <div>
+            <UserItem key={user.id} user={user} dummy="osama" />
+          </div>
         ))}
       </div>
     );
   }
-}
+};
 const usersStyle = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-  gridGap:'1rem'
+  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+  gridGap: "1rem",
 };
+Users.propTypes ={
+    users:PropTypes.array.isRequired,
+    loading:PropTypes.bool.isRequired,
+}
 export default Users;

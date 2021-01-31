@@ -2,7 +2,8 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPeace } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
-const Navbar = ({icon, title}) => {
+import { Link } from "react-router-dom";
+const Navbar = ({ icon, title }) => {
   // incase of not passing any props to this component rather than displaing nothing we can use the
   // below defaultProps object... If we pass the props will be overridden so its a better safe way to use this way
   // static defaultProps = {
@@ -21,6 +22,10 @@ const Navbar = ({icon, title}) => {
       <h1>
         <FontAwesomeIcon icon={faPeace} /> {title}
       </h1>
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li>
+      </ul>
     </nav>
   );
 };

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 // import UserItem from "./components/users/UserItem"
 import Users from "./components/users/Users";
+import User from "./components/users/User"; // each github user
 import axios from "axios";
 import Search from "./components/users/Search";
 import Alert from "./components/layout/Alert";
@@ -11,6 +12,7 @@ import About from "./components/pages/About";
 class App extends Component {
   state = {
     users: [],
+    user: {},
     loading: false,
     alert: null,
   };
@@ -48,6 +50,16 @@ class App extends Component {
   clearAlert = () => {
     this.setState({ alert: null });
   };
+  // after adding router to our app now let's work on single user component
+  // todo: Get single GITHUB User
+  getUser = async (username) => {
+    this.setState({ loading: true });
+    const res = await axios.get(
+      `https://api.github.com/users/${username}?client_id=${process.env.ID}&client_secret=${process.env.SECRET}`
+    );
+    // console.log(res.data.items);
+    this.setState({ user: res.data, loading: false });
+  };
   render() {
     const arr = [11, 22, 33, 44, 55];
     return (
@@ -78,6 +90,18 @@ class App extends Component {
                 )}
               />
               <Route exact path="/about" component={About} />
+              <Route
+                exact
+                path="/user/:login"
+                render={(props) => (
+                  <User
+                    {...props}
+                    getUser={this.getUser}
+                    user={this.state.user}
+                    loading={this.state.loading}
+                  />
+                )}
+              />
             </Switch>
           </div>
         </div>

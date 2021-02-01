@@ -1,6 +1,7 @@
 import React from "react";
 import img from "../../assets/1.png";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 const UserItem = ({user:{avatar_url, login, html_url}, dummy}) => {
   // const UserItem = ({ login, avatar_url, html_url }) => { // valid way of destructuring the props
   // and previously this was a class component and now we changed it to functional component
@@ -27,9 +28,9 @@ const UserItem = ({user:{avatar_url, login, html_url}, dummy}) => {
       <h3>{login}</h3>
       {/* <h3>{dummy}</h3> */}
       <div>
-        <a href={html_url} className="btn btn-dark btn-sm my-1">
+        <Link to={`/user/${login}`} className="btn btn-dark btn-sm my-1">
           More
-        </a>
+        </Link>
       </div>
     </div>
   );

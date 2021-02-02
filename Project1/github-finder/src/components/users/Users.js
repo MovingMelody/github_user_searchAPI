@@ -30,8 +30,8 @@ const Users = (props) => {
     return (
       <div style={usersStyle}>
         {users.map((user) => (
-          <div>
-            <UserItem key={user.id} user={user} dummy="osama" />
+          <div key={user.login}>
+            <UserItem user={user} dummy="osama" />
           </div>
         ))}
       </div>

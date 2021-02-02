@@ -1,60 +1,68 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-class Search extends Component {
-  state = {
-    text: "",
-  };
-  static propTypes = {
-    searchUsers: PropTypes.func.isRequired,
-    clearUsers: PropTypes.func.isRequired,
-    showClear: PropTypes.bool.isRequired,
-    showAlert: PropTypes.func.isRequired,
-  };
-  formSubmitprevent = (e) => {
+const Search = ({
+  showAlert,
+  searchUsers,
+  clearAlert,
+  showClear,
+  clearUsers,
+}) => {
+  // todo: now we are on the allfncomps branch to convert all the class components to functional components
+  // you can switch to master branch to see the class components
+  // lets convert this class component to functional component
+  // and implement better state management in this branch using context api and other state management techniques
+  // state = {
+  // valid in class component
+  //   text: "",
+  // };
+  const [text, setText] = useState("");
+  const formSubmitprevent = (e) => {
     e.preventDefault();
   };
-  onSubmit = (e) => {
-    if (this.state.text === "") {
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (text === "") {
       //   alert("enter a name"); instead of a default alert message lets create our own custom alert
-      this.props.showAlert("Enter something...", "light");
+      showAlert("Enter something...", "light");
     } else {
-      this.props.searchUsers(this.state.text);
-      this.setState({ text: "" });
-      this.props.clearAlert();
+      searchUsers(text);
+      setText("");
+      clearAlert();
     }
-
-    e.preventDefault();
   };
-  onchangeinputHandler = (e) =>
-    this.setState({ [e.target.name]: e.target.value });
+  const onchangeinputHandler = (e) => setText(e.target.value);
 
-  render() {
-    const { showClear, clearUsers } = this.props;
-    return (
-      <div>
-        <form className="form" onSubmit={this.formSubmitprevent}>
-          <input
-            onChange={this.onchangeinputHandler}
-            type="text"
-            name="text"
-            placeholder="Search Users here...."
-            value={this.state.text}
-          />
-          <input
-            type="submit"
-            value="Search"
-            onClick={this.onSubmit}
-            className="btn btn-block btn-dark"
-          />
-          {showClear && (
-            <button className="btn btn-light btn-block" onClick={clearUsers}>
-              clear
-            </button>
-          )}
-        </form>
-      </div>
-    );
-  }
-}
+  // const { showClear, clearUsers } = props;
+  return (
+    <div>
+      <form className="form" onSubmit={formSubmitprevent}>
+        <input
+          onChange={onchangeinputHandler}
+          type="text"
+          name="text"
+          placeholder="Search Users here...."
+          value={text}
+        />
+        <input
+          type="submit"
+          value="Search"
+          onClick={onSubmit}
+          className="btn btn-block btn-dark"
+        />
+        {showClear && (
+          <button className="btn btn-light btn-block" onClick={clearUsers}>
+            clear
+          </button>
+        )}
+      </form>
+    </div>
+  );
+};
 
+Search.propTypes = {
+  searchUsers: PropTypes.func.isRequired,
+  clearUsers: PropTypes.func.isRequired,
+  showClear: PropTypes.bool.isRequired,
+  showAlert: PropTypes.func.isRequired,
+};
 export default Search;

@@ -1,12 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
-const Search = ({
-  showAlert,
-  searchUsers,
-  clearAlert,
-  showClear,
-  clearUsers,
-}) => {
+import GithubContext from "../../context/github/githubContext";
+const Search = ({ showAlert, clearAlert, showClear, clearUsers }) => {
+  const githubContext = useContext(GithubContext);
   // todo: now we are on the allfncomps branch to convert all the class components to functional components
   // you can switch to master branch to see the class components
   // lets convert this class component to functional component
@@ -25,7 +21,7 @@ const Search = ({
       //   alert("enter a name"); instead of a default alert message lets create our own custom alert
       showAlert("Enter something...", "light");
     } else {
-      searchUsers(text);
+     githubContext.searchUsers(text);
       setText("");
       clearAlert();
     }
@@ -60,7 +56,6 @@ const Search = ({
 };
 
 Search.propTypes = {
-  searchUsers: PropTypes.func.isRequired,
   clearUsers: PropTypes.func.isRequired,
   showClear: PropTypes.bool.isRequired,
   showAlert: PropTypes.func.isRequired,

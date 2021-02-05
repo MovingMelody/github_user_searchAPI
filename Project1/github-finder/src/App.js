@@ -8,20 +8,22 @@ import axios from "axios";
 import Search from "./components/users/Search";
 import Alert from "./components/layout/Alert";
 import About from "./components/pages/About";
+import GithubState from "./context/github/githubState";
 const App = () => {
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
 
-  const searchUsers = async (searchName) => {
-    setLoading(true);
-    const res = await axios.get(
-      `https://api.github.com/search/users?q=${searchName}&client_id=${process.env.ID}&client_secret=${process.env.SECRET}`
-    );
-    setUsers(res.data.items);
-    setLoading(false);
-  };
+  // searching users
+  // const searchUsers = async (searchName) => {
+  //   setLoading(true);
+  //   const res = await axios.get(
+  //     `https://api.github.com/search/users?q=${searchName}&client_id=${process.env.ID}&client_secret=${process.env.SECRET}`
+  //   );
+  //   setUsers(res.data.items);
+  //   setLoading(false);
+  // };
   // clearing the search results
   const clearUsers = () => {
     setUsers([]);
@@ -47,46 +49,49 @@ const App = () => {
   };
   const arr = [11, 22, 33, 44, 55];
   return (
-    <Router>
-      <div className="App">
-        <Navbar arr={arr} title="Github Finder" />
-        {/* <UserItem /> */}
-        <div className="container">
-          <Alert alert={alert} />
-          <Switch>
-            <Route
-              exact
-              path="/"
-              render={(props) => (
-                <Fragment>
-                  <Search
-                    clearAlert={clearAlert}
-                    searchUsers={searchUsers}
-                    clearUsers={clearUsers}
-                    showClear={users.length > 0 ? true : false}
-                    showAlert={showAlert}
+    <GithubState>
+      <Router>
+        <div className="App">
+          <Navbar arr={arr} title="Github Finder" />
+          {/* <UserItem /> */}
+          <div className="container">
+            <Alert alert={alert} />
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={(props) => (
+                  <Fragment>
+                    <Search
+                      clearAlert={clearAlert}
+                      // searchUsers={searchUsers} this fn moved to context
+                      clearUsers={clearUsers}
+                      showClear={users.length > 0 ? true : false}
+                      showAlert={showAlert}
+                    />
+                    <Users />
+                    {/* <Users loading={loading} users={users} /> */}
+                  </Fragment>
+                )}
+              />
+              <Route exact path="/about" component={About} />
+              <Route
+                exact
+                path="/user/:login"
+                render={(props) => (
+                  <User
+                    {...props}
+                    getUser={getUser}
+                    user={user}
+                    loading={loading}
                   />
-                  <Users loading={loading} users={users} />
-                </Fragment>
-              )}
-            />
-            <Route exact path="/about" component={About} />
-            <Route
-              exact
-              path="/user/:login"
-              render={(props) => (
-                <User
-                  {...props}
-                  getUser={getUser}
-                  user={user}
-                  loading={loading}
-                />
-              )}
-            />
-          </Switch>
+                )}
+              />
+            </Switch>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </GithubState>
   );
 };
 
